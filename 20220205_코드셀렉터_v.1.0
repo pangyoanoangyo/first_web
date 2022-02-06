@@ -1,0 +1,132 @@
+from tkinter import *
+from tkinter import ttk
+from tkinter import font
+from tkinter import messagebox
+import pandas as pd
+import openpyxl as ox
+from openpyxl import Workbook
+import datetime as dt
+
+#오늘의 날짜
+now=dt.datetime.now()
+
+# 코드속 색상표 
+WHITE = "#FFFFFF"
+BLACK = "#000000"
+VD_GRAY ='#505050'
+GRAY_HEAVY='#50586C'
+LABEL_COLOR = "#25265E"
+IDIS_COLOR = "#0099b0"
+IDIS_NAM = "#314456"
+
+# Tkinter의 시작
+root = Tk()
+root.title("IDIS 견적서 MAKER") # 윈도우 상단의 이름
+root.geometry("1000x300") # 가로 * 세로 ("640x480+300+100") # 가로 * 세로 + x좌표 + y좌표
+root.resizable(False, False) # x(너비), y(높이) 높이 변경불가
+
+# 폰트사이즈 함수
+f10 = font.Font(family="Sandoll 맑은고딕", size=10,weight='bold')
+f11 = font.Font(family="Sandoll 맑은고딕", size=11,weight='bold')
+f12 = font.Font(family="Sandoll 맑은고딕", size=12,weight='bold')
+f13 = font.Font(family="Sandoll 맑은고딕", size=13,weight='bold')
+f14 = font.Font(family="Sandoll 맑은고딕", size=14,weight='bold')
+f15 = font.Font(family="Sandoll 맑은고딕", size=15,weight='bold')
+
+# def ft(a):
+#     font.Font(family="Sandoll 맑은고딕", size=int(a),weight='bold')
+
+# 라벨만들기 함수
+def lbl(name,frame,font_size,font_color,r,c,px,py,text_m):
+    name = Label(frame,font=font_size,fg=font_color,text=text_m)
+    name.grid(row=r,column=c,padx=px, pady=py, sticky=N+E+W+S)
+
+# 텍스트 만들기 함수
+def txt(t_name,frame,넓이,높이,r,c,px,py,text_in):
+    t_name = Text(frame, width=넓이, height=높이)
+    t_name.insert(END, text_in)
+    t_name.grid(row=r,column=c,padx=px, pady=py, sticky=N+E+W+S)
+
+# 엔트리 만들기 함수
+def ent(e_name,frame,넓이,r,c,px,py,text_in):
+    e_name = Entry(frame, width=넓이)
+    e_name.insert(END, text_in)
+    e_name.grid(row=r,column=c,padx=px, pady=py, sticky=N+E+W+S)
+
+
+# # 버튼 만들기 함수
+# def btn(b_name, frame,넓이,높이,글자색,com,txt_b,r,c,px,py):
+#     b_name = Button(frame, width=넓이, height=높이,fg=글자색, text=txt_b,command=com)
+#     b_name.grid(row=r,column=c,padx=px, pady=py, sticky=N+E+W+S)
+
+lbl('date',root,f11,BLACK,1,0,5,5,"날짜")
+lbl('to_day',root,f11,IDIS_COLOR,1,3,5,5,now.strftime('%Y년 %m월 %d일 %A'))
+lbl('cam',root,f11,BLACK,2,0,5,5,'제품')
+
+# txt('txt1',root,20,1,2,1,5,5,"내용입력")
+
+df = pd.DataFrame(pd.read_excel('idis_line up.xlsx'))
+df.set_index('Code', inplace=True)
+
+ee1 = ent('ent_1',root,25,2,1,5,5,'SAP code')
+ee2 = ent('ent_2',root,25,3,1,5,5,'SAP code')
+ee3 = ent('ent_3',root,25,4,1,5,5,'SAP code')
+ee4 = ent('ent_4',root,25,5,1,5,5,'SAP code')
+ee5 = ent('ent_5',root,25,6,1,5,5,'SAP code')
+
+rr1 = lbl('cam_r1',root,f12,BLACK,2,3,5,5,'모델명')
+rr2 = lbl('cam_r2',root,f12,BLACK,3,3,5,5,'모델명')
+rr3 = lbl('cam_r3',root,f12,BLACK,4,3,5,5,'모델명')
+rr4 = lbl('cam_r4',root,f12,BLACK,5,3,5,5,'모델명')
+rr5 = lbl('cam_r5',root,f12,BLACK,6,3,5,5,'모델명')
+
+# cam_r = Label(root,font=f12,fg=IDIS_COLOR,text="모델명")
+# cam_r.grid(row=2,column=3,padx=5, pady=5, sticky=N+E+W+S)
+# def tt(name_t,ent_m,name_r,txt):
+#     name_t=int(ent_m.get())
+#     name_r = df.loc[name_t,txt]
+
+def btn_cmd1():
+    # 내용 출력
+    t1=int(ee1.get())
+    r1 = df.loc[t1,'Model']
+    rr1.configure(text="{0}".format(r1))
+    
+
+    
+    # cam_r.configure(text="{0}".format(sheet_line["B15"].value))
+
+btn_1 = Button(root, width=10, height=1,fg=BLACK, text='Go',command=btn_cmd1)
+btn_1.grid(row=7,column=2,padx=5, pady=5, sticky=N+E+W+S)
+
+
+wb_pjt = ox.load_workbook('idis_form.xlsx') # 엑셀 불러오기
+wb_line = ox.load_workbook('idis_line up.xlsx') 
+sheet_pjt = wb_pjt['견적서'] #시트 가지고 오기
+sheet_line= wb_line['Sheet']
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# lbl('cam_r',root,10,IDIS_COLOR,1,2,5,5,'')
+
+
+    
+
+
+
+
+# wb_pjt.save('idis_wb_test.xlsx')
+
+
+root.mainloop()
